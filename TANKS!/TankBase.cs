@@ -1,9 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TANKS_
 {
@@ -13,7 +8,7 @@ namespace TANKS_
         private Texture2D _turret;
         public TankBase(TankColor color, Weapon weapon)
         {
-            GameRoot.Instance.Content.Load();
+           //GameRoot.Instance.Content.Load();
 
         }
     }
