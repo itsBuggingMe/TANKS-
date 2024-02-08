@@ -10,6 +10,8 @@ namespace TANKS_
         private SpriteBatch _spriteBatch;
         public static GameRoot Instance { get; private set; }
 
+        private World world = new World();
+
         public GameRoot()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -29,7 +31,6 @@ namespace TANKS_
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -37,7 +38,7 @@ namespace TANKS_
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            world.Tick();
 
             base.Update(gameTime);
         }
@@ -46,7 +47,7 @@ namespace TANKS_
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            world.Draw(_spriteBatch);
 
             base.Draw(gameTime);
         }
