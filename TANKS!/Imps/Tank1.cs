@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using TANKS_;
 
-namespace TANKS_.Imps
+namespace YourTank
 {
-    internal class Tank1 : Tank
+    internal class Persons_Tank : Tank
     {
-        public Tank1() : base(TankColor.Copper, Weapon.Cannon, "test")
+        public override void Initalize()
         {
-
+            TankColor = TankColor.Copper;
+            Weapon = Weapon.Normal;
         }
 
         public override void Update(Tank[] otherTanks)
         {
-
+            Accelerate(1);
+            RotateTowards(Mouse.GetState().Position.ToVector2());
+            RotateTurretTowards(Mouse.GetState().Position.ToVector2());
         }
     }
 }
