@@ -15,6 +15,8 @@ namespace TANKS_
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public static GameRoot Instance { get; private set; }
+        private List<string> Console = new();
+        public void WriteConsole(string s) => Console.Add(s);
 
         private World world = new World();
 

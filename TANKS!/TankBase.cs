@@ -15,9 +15,12 @@ namespace TANKS_
         public float BaseRotation => _Rotation;
         public float TurretRotation => _TurretRotation + _Rotation;
 
-        public TankColor TankColor { get; set; } = TankColor.Copper;
-        public Weapon Weapon { get; set; } = Weapon.Normal;
-        public string Name { get; set; } = "Unnamed";
+        public TankColor TankColor { get; protected set; } = TankColor.Copper;
+        public Weapon Weapon { get; protected set; } = Weapon.Normal;
+        public string Name { get; private set; } = "Unnamed";
+
+        public string ShoutText { get; private set; }
+        private int shoutTicksLeft;
 
         /// <summary>
         /// Moves the tank in the direction it is pointing in
@@ -87,11 +90,22 @@ namespace TANKS_
 
             RotateTurret(SmoothRot(amt, TurretRotation));
         }
+
+        /// <summary>
+        /// Displays a section of text above the player
+        /// </summary>
+        /// <param name="text">The text to be displayed</param>
+        public void Shout(string text)
+        {
+            ShoutText = text;
+            shoutTicksLeft = 120;
+        }
         #endregion
+
+
         private readonly Texture2D _base;
         private readonly Texture2D _turret;
 
-        static readonly Point Size = new Point(50);
         const float RotSpeed = 0.04f;
 
         public Rectangle GetBounds => MathFunc.RectangleFromCenterSize(_loc.ToPoint(), new Point(120));
@@ -160,6 +174,12 @@ namespace TANKS_
                 _vel *= -1f;
                 _loc = prevLoc;
             }
+
+            if(shoutTicksLeft == 0)
+            {
+                ShoutText = null;
+            }
+            shoutTicksLeft--;
         }
 
 
@@ -180,6 +200,11 @@ namespace TANKS_
                 MathFunc.CenterStr(Name, _loc - Vector2.UnitY * 70, font, out Vector2 newLoc, new Vector2(0.2f)), 
                 newLoc, 
                 Color.White, 0, Vector2.Zero, 0.2f, SpriteEffects.None, 0);
+
+            spriteBatch.DrawString(font,
+                MathFunc.CenterStr(ShoutText, _loc - Vector2.UnitY * 120, font, out Vector2 newLoc1, new Vector2(0.15f)),
+                newLoc1,
+                Color.LightGray, 0, Vector2.Zero, 0.15f, SpriteEffects.None, 0);
         }
 
         private float SmoothRot(float amt, float curr)

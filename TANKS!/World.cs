@@ -59,7 +59,7 @@ namespace TANKS_
                     //dont crash if tank crashes
                     try
                     {
-                        tank.DoUpdate(Tanks.ToArray());
+                        tank.DoUpdate(Tanks.Where(t => t != tank).ToArray());
                     }
                     catch (Exception e)
                     {

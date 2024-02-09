@@ -11,27 +11,29 @@ namespace TankClient
     {
         public override void Initalize()
         {
-            TankColor = TankColor.Copper;
-            Weapon = Weapon.Normal;
+            TankColor = TankColor.Blue;
+            Weapon = Weapon.Cannon;
         }
 
         Vector2 targetLoc = GetRandomLoc();
 
         private static Vector2 GetRandomLoc()
         {
-            return new Vector2(Random.Shared.Next(0, 960), Random.Shared.Next(0,960));
+            return new Vector2(Random.Shared.Next(120, 960-120), Random.Shared.Next(120,960-120));
         }
 
         public override void Update(Tank[] otherTanks)
         {
             Accelerate(1);
             RotateTowards(targetLoc);
-            RotateTurretTowards(targetLoc);
+            if (otherTanks.Length != 0)
+                RotateTurretTowards(otherTanks[0].Location);
 
             if(Vector2.Distance(targetLoc, Location) < 200)
             {
                 targetLoc = GetRandomLoc();
             }
+            Shout(targetLoc.ToString());
         }
     }
 }
