@@ -26,7 +26,7 @@ namespace TANKS_
         /// Moves the tank in the direction it is pointing in
         /// </summary>
         /// <param name="power">How much power to use. -1 for full backwards throttle, 1 for full forwards throttle</param>
-        public void Accelerate(float power) 
+        protected void Accelerate(float power) 
         {
             if (DoneActions.HasFlag(Actions.Accelerate))
                 return;
@@ -39,7 +39,7 @@ namespace TANKS_
         /// Rotates the tank base. The tank rotates relatively slowly.
         /// </summary>
         /// <param name="amount">Amount to rotate. 1 means full speed counterclockwise, -1 means full speed clockwise</param>
-        public void RotateBase(float amount)
+        protected void RotateBase(float amount)
         {
             if (DoneActions.HasFlag(Actions.RotateBase))
                 return;
@@ -52,7 +52,7 @@ namespace TANKS_
         /// Rotates the tank turret. The turrey rotates relatively quickly.
         /// </summary>
         /// <param name="amount">Amount to rotate. 1 means full speed counterclockwise, -1 means full speed clockwise</param>
-        public void RotateTurret(float amount)
+        protected void RotateTurret(float amount)
         {
             if (DoneActions.HasFlag(Actions.RotateTurr))
                 return;
@@ -65,7 +65,7 @@ namespace TANKS_
         /// Rotate towards another location as fast as possible
         /// </summary>
         /// <param name="location">The location to point towards</param>
-        public void RotateTowards(Vector2 location)
+        protected void RotateTowards(Vector2 location)
         {
             //toB - fromA
             Vector2 diff = location - Location;
@@ -79,7 +79,7 @@ namespace TANKS_
         /// Rotate turret towards another location. Turret rotation is faster than base rotation
         /// </summary>
         /// <param name="location">The location to point towards</param>
-        public void RotateTurretTowards(Vector2 location)
+        protected void RotateTurretTowards(Vector2 location)
         {
             //toB - fromA
             Vector2 diff = location - Location;
@@ -95,7 +95,7 @@ namespace TANKS_
         /// Displays a section of text above the player
         /// </summary>
         /// <param name="text">The text to be displayed</param>
-        public void Shout(string text)
+        protected void Shout(string text)
         {
             ShoutText = text;
             shoutTicksLeft = 120;
@@ -143,7 +143,7 @@ namespace TANKS_
         private Vector2 OriginTurret;
         private static Vector2 DrawSize = Vector2.One * 0.5f;
 
-        public void DoUpdate(Tank[] otherTanks)
+        internal void DoUpdate(Tank[] otherTanks)
         {
             DoneActions = Actions.None;
             FramesSinceFire++;
@@ -183,11 +183,11 @@ namespace TANKS_
         }
 
 
-        public abstract void Update(Tank[] otherTanks);
+        internal abstract void Update(Tank[] otherTanks);
 
 
         float treadSwapScore = 0;
-        public void Draw(SpriteBatch spriteBatch, SpriteFont font)
+        protected void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             Texture2D thisTrack = (int)treadSwapScore % 10 > 4 ? TrackA : TrackB;
             spriteBatch.Draw(thisTrack, _loc, null, Color.White, _Rotation, new Vector2(91, 170), DrawSize, SpriteEffects.None, 0);
@@ -276,7 +276,7 @@ namespace TANKS_
             };
         }
 
-        public abstract void Initalize();
+        protected abstract void Initalize();
         #endregion
     }
 }
