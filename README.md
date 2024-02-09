@@ -34,22 +34,22 @@ Note: All units in pixels, and rotations are in radians.
 ### Example: ###
 ```csharp
 internal class Rammer : Tank
+{
+    public override void Initalize()
     {
-        public override void Initalize()
-        {
-            TankColor = TankColor.Blue;
-            Weapon = Weapon.Cannon;
-        }
-
-        public override void Update(Tank[] otherTanks)
-        {
-            if(otherTanks.Length == 0)
-                return;
-                
-            Accelerate(1);
-            RotateTowards(otherTanks[0].Location);
-            RotateTurretTowards(otherTanks[0].Location);
-            Shout(targetLoc.ToString());
-        }
+        TankColor = TankColor.Blue;
+        Weapon = Weapon.Cannon;
     }
+
+    public override void Update(Tank[] otherTanks)
+    {
+        if(otherTanks.Length == 0)
+            return;
+            
+        Accelerate(1);
+        RotateTowards(otherTanks[0].Location);
+        RotateTurretTowards(otherTanks[0].Location);
+        Shout(targetLoc.ToString());
+    }
+}
 ```
