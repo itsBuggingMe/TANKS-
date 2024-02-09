@@ -9,7 +9,7 @@ namespace TankClient
 {
     internal class YourTank : Tank
     {
-        public override void Initalize()
+        protected override void Initalize()
         {
             TankColor = TankColor.Blue;
             Weapon = Weapon.Cannon;
@@ -22,7 +22,7 @@ namespace TankClient
             return new Vector2(Random.Shared.Next(120, 960-120), Random.Shared.Next(120,960-120));
         }
 
-        public override void Update(Tank[] otherTanks)
+        protected override void Update(Tank[] otherTanks)
         {
             Accelerate(1);
             RotateTowards(targetLoc);

@@ -183,11 +183,11 @@ namespace TANKS_
         }
 
 
-        internal abstract void Update(Tank[] otherTanks);
+        protected abstract void Update(Tank[] otherTanks);
 
 
         float treadSwapScore = 0;
-        protected void Draw(SpriteBatch spriteBatch, SpriteFont font)
+        internal void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             Texture2D thisTrack = (int)treadSwapScore % 10 > 4 ? TrackA : TrackB;
             spriteBatch.Draw(thisTrack, _loc, null, Color.White, _Rotation, new Vector2(91, 170), DrawSize, SpriteEffects.None, 0);
