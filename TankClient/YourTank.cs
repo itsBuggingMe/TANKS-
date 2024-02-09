@@ -12,7 +12,7 @@ namespace TankClient
         protected override void Initalize()
         {
             TankColor = TankColor.Blue;
-            Weapon = Weapon.Cannon;
+            Weapon = Weapon.Normal;
         }
 
         Vector2 targetLoc = GetRandomLoc();

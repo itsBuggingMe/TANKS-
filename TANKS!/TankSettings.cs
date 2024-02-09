@@ -15,8 +15,8 @@ namespace TANKS_
 
     public enum Weapon
     {
-        Normal,
-        Cannon,
-        Double,
+        Normal = 40,
+        Cannon = 90,
+        Double = 20,
     }
 }

@@ -13,6 +13,8 @@ namespace TANKS_
     internal class World
     {
         private readonly List<Tank> Tanks = new();
+        private readonly List<Projectile> Projectiles = new();
+
         public Stack<Tank> tanksToAdd = new();
 
         public Action<Tank, Exception> TankException => delegate {};
@@ -78,8 +80,24 @@ namespace TANKS_
                         break;
                     }
                 }
+
+                if(tank.WantFire)
+                {
+                    Projectiles.Add(new Projectile(MathFunc.RotateVectorRad(Vector2.UnitX, tank.TurretRotation - MathHelper.PiOver2) * 32, tank.Location, get(tank.Weapon)));
+                }
+
+                static Projectile.ProjTypes get(Weapon weapon) => weapon switch
+                {
+                    Weapon.Cannon => Projectile.ProjTypes.Heavy_Shell,
+                    Weapon.Double => Projectile.ProjTypes.Light_Shell,
+                    Weapon.Normal => Projectile.ProjTypes.Medium_Shell,
+                    _ => throw new NotImplementedException()
+                };
             }
-            if(Keyboard.GetState().IsKeyDown(Keys.Delete))
+
+            Projectiles.ForEach(p => p.Update());
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Delete))
             {
                 Tanks.Clear();
             }
@@ -87,6 +105,7 @@ namespace TANKS_
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
+            Projectiles.ForEach(p => p.Draw(spriteBatch));
             Tanks.ForEach(t => t.Draw(spriteBatch, font));
         }
     }

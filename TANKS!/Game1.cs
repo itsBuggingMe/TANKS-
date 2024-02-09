@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using YourTank;
 
 namespace TANKS_
 {
@@ -60,6 +61,9 @@ namespace TANKS_
 
 
             Compiler = new RoslynCompiler(AllowedNamespaces, AllowedAssemblies);
+
+
+            world.AddTank(new Persons_Tank());
         }
 
         private int ticks = 60;

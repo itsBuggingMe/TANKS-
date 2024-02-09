@@ -100,6 +100,19 @@ namespace TANKS_
             ShoutText = text;
             shoutTicksLeft = 120;
         }
+
+        /// <summary>
+        /// Fires the cannon. Will not do anything if cooldown has not passed
+        /// </summary>
+        protected void Fire()
+        {
+            if(FramesSinceFire > (int)Weapon)
+            {
+                FramesSinceFire = 0;
+                TotalProj++;
+                WantFire = true;
+            }
+        }
         #endregion
 
 
@@ -120,8 +133,9 @@ namespace TANKS_
         private static Texture2D TrackB = GameRoot.Instance.Content.Load<Texture2D>(Path.Combine("Tracks", "TrackB"));
         private Actions DoneActions = Actions.None;
         private int FramesSinceFire = 0;
-        
+        public int TotalProj { get; private set; }
 
+        internal bool WantFire { get; private set; }
         public Tank()
         {
             Initalize();
@@ -147,7 +161,7 @@ namespace TANKS_
         {
             DoneActions = Actions.None;
             FramesSinceFire++;
-
+            WantFire = false;
             Update(otherTanks);
             
             if(DoneActions != Actions.None)
@@ -200,11 +214,14 @@ namespace TANKS_
                 MathFunc.CenterStr(Name, _loc - Vector2.UnitY * 70, font, out Vector2 newLoc, new Vector2(0.2f)), 
                 newLoc, 
                 Color.White, 0, Vector2.Zero, 0.2f, SpriteEffects.None, 0);
-
-            spriteBatch.DrawString(font,
+           
+            if(ShoutText is not null)
+            {
+                spriteBatch.DrawString(font,
                 MathFunc.CenterStr(ShoutText, _loc - Vector2.UnitY * 120, font, out Vector2 newLoc1, new Vector2(0.15f)),
                 newLoc1,
                 Color.LightGray, 0, Vector2.Zero, 0.15f, SpriteEffects.None, 0);
+            }
         }
 
         private float SmoothRot(float amt, float curr)

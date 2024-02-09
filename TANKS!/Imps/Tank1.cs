@@ -12,14 +12,28 @@ namespace YourTank
         protected override void Initalize()
         {
             TankColor = TankColor.Copper;
-            Weapon = Weapon.Normal;
+            Weapon = Weapon.Double;
         }
 
         protected override void Update(Tank[] otherTanks)
         {
-            Accelerate(1);
-            RotateTowards(Mouse.GetState().Position.ToVector2());
+            var kstat = Keyboard.GetState();
+
+            if (kstat.IsKeyDown(Keys.W))
+            {
+                Accelerate(1);
+            }
+            if(kstat.IsKeyDown(Keys.A))
+            {
+                RotateBase(-1);
+            }
+            if (kstat.IsKeyDown(Keys.D))
+            {
+                RotateBase(1);
+            }
+
             RotateTurretTowards(Mouse.GetState().Position.ToVector2());
+            Fire();
         }
     }
 }
