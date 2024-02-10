@@ -9,23 +9,27 @@ namespace TANKS_
         public Vector2 Location { get; internal set; }
         public Vector2 Velocity { get; internal set; }
 
-        internal readonly float Diameter;
+        internal readonly float Radius;
         internal readonly ProjTypes Damage;
         private Texture2D texture;
         internal readonly float Rotation;
 
+        public readonly Tank Parent;
+
         public enum ProjTypes
         {
+            //dmg
             Light_Shell = 10,
             Medium_Shell = 20,
             Heavy_Shell = 40,
         }
 
-        public Projectile(Vector2 Velocity, Vector2 Location, ProjTypes Damage)
+        public Projectile(Vector2 Velocity, Vector2 Location, ProjTypes Damage, Tank parent)
         {
+            this.Parent = parent;
             this.Location = Location;
             this.Velocity = Velocity;
-            this.Diameter = 20;//bad idea? probs
+            this.Radius = 40;//bad idea? probs
             this.Damage = Damage;
             Rotation = MathFunc.GetAngleRad(Velocity) + MathHelper.PiOver2;
             texture = GameRoot.Instance.Content.Load<Texture2D>(Path.Combine("Effects", Damage.ToString()));

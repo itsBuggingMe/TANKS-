@@ -7,12 +7,12 @@ using TANKS_;
 
 namespace YourTank
 {
-    internal class Persons_Tank : Tank
+    internal class ControlTank : Tank
     {
         protected override void Initalize()
         {
             TankColor = TankColor.Copper;
-            Weapon = Weapon.Double;
+            Weapon = Weapon.Normal;
         }
 
         protected override void Update(Tank[] otherTanks)

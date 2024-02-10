@@ -4,14 +4,13 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 
 namespace TANKS_
 {
-    public abstract class Tank
+    public abstract class Tank : DynamicHitbox
     {
         #region API
-        public Vector2 Location => _loc;
-        public float Velcity => _vel;
         public float BaseRotation => _Rotation;
         public float TurretRotation => _TurretRotation + _Rotation;
 
@@ -20,7 +19,7 @@ namespace TANKS_
         public string Name { get; private set; } = "Unnamed";
 
         public string ShoutText { get; private set; }
-        private int shoutTicksLeft;
+        public int Health { get; internal set; } = 100;
 
         /// <summary>
         /// Moves the tank in the direction it is pointing in
@@ -32,7 +31,7 @@ namespace TANKS_
                 return;
             DoneActions |= Actions.Accelerate;
 
-            _vel += Math.Clamp(power, -1, 1) * 0.15f; 
+            _accel += Math.Clamp(power, -1, 1) * 0.25f; 
         }
 
         /// <summary>
@@ -114,20 +113,18 @@ namespace TANKS_
             }
         }
         #endregion
-
-
         private readonly Texture2D _base;
         private readonly Texture2D _turret;
 
         const float RotSpeed = 0.04f;
 
-        public Rectangle GetBounds => MathFunc.RectangleFromCenterSize(_loc.ToPoint(), new Point(120));
-        private Vector2 _loc = Vector2.One * 100;
-        private float _vel;
+        const int size = 60;
+        public Rectangle GetBounds { get; private set; }
+        private float _accel;
 
         private float _Rotation;
         private float _TurretRotation;
-        private float _turretGlobalRotation => _Rotation + _TurretRotation;
+        private int shoutTicksLeft;
 
         private static Texture2D TrackA = GameRoot.Instance.Content.Load<Texture2D>(Path.Combine("Tracks", "TrackA"));
         private static Texture2D TrackB = GameRoot.Instance.Content.Load<Texture2D>(Path.Combine("Tracks", "TrackB"));
@@ -152,10 +149,14 @@ namespace TANKS_
 
             OriginTank = _base.Bounds.Size.ToVector2() * new Vector2(0.5f, 0.67f);
             OriginTurret = _turret.Bounds.Size.ToVector2() * new Vector2(0.5f, 0.67f);
+
+            Rectangle b = MathFunc.RectangleFromCenterSize(Point.Zero, _base.Bounds.Size);
+
+            SetModelVerts(new Vector2[] { new(b.Left, b.Top), new(b.Right, b.Top), new(b.Right, b.Bottom), new(b.Left, b.Bottom), new(b.Left, b.Top) }.Select(v => v * 0.2f).ToArray());
         }
         private Vector2 OriginTank;
         private Vector2 OriginTurret;
-        private static Vector2 DrawSize = Vector2.One * 0.5f;
+        private static Vector2 DrawSize = Vector2.One * 0.3f;
 
         internal void DoUpdate(Tank[] otherTanks)
         {
@@ -170,30 +171,19 @@ namespace TANKS_
             }
 
             Vector2 rotatedDir = MathFunc.RotateVectorRad(-Vector2.UnitY, _Rotation);
-            Vector2 prevLoc = _loc;
-            _loc += rotatedDir * _vel;
+            Velocity += rotatedDir * _accel;
+            Velocity *= 0.95f;
+            Location += Velocity;
 
-            _vel *= 0.94f;
-            if(_vel < 0.01f)
-                _vel = 0;
-
-            Rectangle left = GetBounds;
-
-            if (
-                left.Left < 0 ||
-                left.Top < 0 ||
-                left.Right > 960 ||
-                left.Bottom > 960)
-            {
-                _vel *= -1f;
-                _loc = prevLoc;
-            }
+            _accel = 0;
 
             if(shoutTicksLeft == 0)
             {
                 ShoutText = null;
             }
             shoutTicksLeft--;
+
+            GetBounds = new((int)Location.X - (size >> 1), (int)Location.Y - (size >> 1), size, size);
         }
 
 
@@ -204,41 +194,45 @@ namespace TANKS_
         internal void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             Texture2D thisTrack = (int)treadSwapScore % 10 > 4 ? TrackA : TrackB;
-            spriteBatch.Draw(thisTrack, _loc, null, Color.White, _Rotation, new Vector2(91, 170), DrawSize, SpriteEffects.None, 0);
-            spriteBatch.Draw(thisTrack, _loc, null, Color.White, _Rotation, new Vector2(-49,170), DrawSize, SpriteEffects.None, 0);
+            spriteBatch.Draw(thisTrack, Location, null, Color.White, _Rotation, new Vector2(91, 170), DrawSize, SpriteEffects.None, 0);
+            spriteBatch.Draw(thisTrack, Location, null, Color.White, _Rotation, new Vector2(-49,170), DrawSize, SpriteEffects.None, 0);
 
-            spriteBatch.Draw(_base, _loc, null, Color.White, _Rotation, OriginTank, DrawSize, SpriteEffects.None, 0);
-            spriteBatch.Draw(_turret, _loc, null, Color.White, _turretGlobalRotation, OriginTurret, DrawSize, SpriteEffects.None, 0);
+            spriteBatch.Draw(_base, Location, null, Color.White, _Rotation, OriginTank, DrawSize, SpriteEffects.None, 0);
+            spriteBatch.Draw(_turret, Location, null, Color.White, _Rotation + _TurretRotation, OriginTurret, DrawSize, SpriteEffects.None, 0);
 
             spriteBatch.DrawString(font, 
-                MathFunc.CenterStr(Name, _loc - Vector2.UnitY * 70, font, out Vector2 newLoc, new Vector2(0.2f)), 
+                MathFunc.CenterStr(Name, Location - Vector2.UnitY * 70, font, out Vector2 newLoc, new Vector2(0.1f)), 
                 newLoc, 
-                Color.White, 0, Vector2.Zero, 0.2f, SpriteEffects.None, 0);
+                Color.White, 0, Vector2.Zero, 0.1f, SpriteEffects.None, 0);
            
             if(ShoutText is not null)
             {
                 spriteBatch.DrawString(font,
-                MathFunc.CenterStr(ShoutText, _loc - Vector2.UnitY * 120, font, out Vector2 newLoc1, new Vector2(0.15f)),
+                MathFunc.CenterStr(ShoutText, Location - Vector2.UnitY * 100, font, out Vector2 newLoc1, new Vector2(0.1f)),
                 newLoc1,
-                Color.LightGray, 0, Vector2.Zero, 0.15f, SpriteEffects.None, 0);
+                Color.Black, 0, Vector2.Zero, 0.1f, SpriteEffects.None, 0);
             }
-        }
 
+            Rectangle healhBack = MathFunc.RectangleFromCenterSize((Location + Vector2.UnitY * 40).ToPoint(), new Point(70, 4));
+            spriteBatch.Draw(GameRoot.Instance.WhitePixel, healhBack, Color.Red);
+            healhBack.Width = (int)((Health / 100f) * 70f);
+            spriteBatch.Draw(GameRoot.Instance.WhitePixel, healhBack, Color.Green);
+        }
         private float SmoothRot(float amt, float curr)
         {
             int dir = MathFunc.RotateDirection(curr, amt);
             float angleDiff = Math.Abs(MathFunc.GetAngleDiff(curr, amt));
             float smoothMutli = 1;
-            if (angleDiff < MathFunc.PiOver8)
+            if (angleDiff < MathFunc.PiOver16)
             {
-                smoothMutli = angleDiff / MathFunc.PiOver8;
+                smoothMutli = angleDiff / MathFunc.PiOver16;
             }
             return smoothMutli * dir;
         }
 
         internal void SetLoc(Vector2 location)
         {
-            _loc = location;
+            Location = location;
         }
 
         [Flags]

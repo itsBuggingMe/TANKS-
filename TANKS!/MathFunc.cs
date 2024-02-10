@@ -11,7 +11,7 @@ namespace TANKS_
     internal static class MathFunc
     {
         public static Action ActionEmpty = () => { };
-        public const float PiOver8 = MathHelper.PiOver4 / 2f;
+        public const float PiOver16 = MathHelper.PiOver4 / 4f;
 
         const float m = 0.06f;
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
