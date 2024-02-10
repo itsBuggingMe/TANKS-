@@ -57,7 +57,7 @@ namespace TANKS_
                 return;
             DoneActions |= Actions.RotateTurr;
 
-            _TurretRotation += Math.Clamp(amount, -1, 1) * RotSpeed * 2;
+            _TurretRotation += Math.Clamp(amount, -1, 1) * RotSpeed * 4;
         }
 
         /// <summary>

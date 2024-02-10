@@ -157,7 +157,7 @@ namespace TANKS_
             float currentAngle = MathF.Atan2(vector.Y, vector.X);
             return new Vector2(newDistance * MathF.Cos(currentAngle), newDistance * MathF.Sin(currentAngle));
         }
-
+        
         public static float AngleBetweenVectors(Vector2 vector1, Vector2 vector2)
         {
             float angleA = GetAngle(vector1) + 720;

@@ -60,10 +60,9 @@ namespace TANKS_
                     if (compilationErrors.Any())
                     {
                         var firstError = compilationErrors.First();
-                        var errorNumber = firstError.Id;
                         var errorDescription = firstError.GetMessage();
-                        var firstErrorMessage = $"{errorNumber}: {errorDescription};";
-                        var exception = new Exception($"Compilation failed, first error is: {firstErrorMessage}");
+                        var firstErrorMessage = $"Line {firstError.Location.GetLineSpan().StartLinePosition}: {errorDescription};";
+                        var exception = new Exception(firstErrorMessage);
                         compilationErrors.ForEach(e => { if (!exception.Data.Contains(e.Id)) exception.Data.Add(e.Id, e.GetMessage()); });
                         throw exception;
                     }

@@ -66,7 +66,7 @@ namespace TANKS_
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
 
-
+            world.AddTank(new ControlTank());
             Compiler = new RoslynCompiler(AllowedNamespaces, AllowedAssemblies);
         }
 
@@ -117,6 +117,10 @@ namespace TANKS_
                     Start += Vector2.UnitY * Console[i].height;
                 }
                 _spriteBatch.End();
+            }
+            if (Start.Y > Window.ClientBounds.Height && Console.Count > 0)
+            {
+                Console.RemoveAt(0);
             }
 
 
@@ -173,6 +177,11 @@ namespace TANKS_
                     string realCode = Encoding.UTF8.GetString(Convert.FromBase64String(code[i][21..]));
                     try
                     {
+                        if(realCode.Contains("Enviroment.Exit"))
+                        {
+                            throw new Exception("Nice try");
+                        }
+
                         var newasm = Compiler.Compile(realCode);
 
                         foreach (var type in newasm.GetTypes())
@@ -188,7 +197,7 @@ namespace TANKS_
                     }
                     catch (Exception e)
                     {
-                        Write($"Tank {id} Compilation error: {e.Message}");
+                        Write($"Tank {id[4..8]} Compilation error: {e.Message}");
                     }
                 }
             }, EndPoint);

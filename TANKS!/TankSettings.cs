@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace TANKS_
 {
-    public enum TankColor
+    public enum TankColor : int
     {
         Copper,
         Green,
         Blue
     }
 
-    public enum Weapon
+    public enum Weapon : int
     {
         Normal = 40,
         Cannon = 90,

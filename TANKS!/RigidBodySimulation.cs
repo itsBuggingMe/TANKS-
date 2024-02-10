@@ -73,11 +73,11 @@ namespace TANKS_
                             otherVel /= total;
                             thisVel /= total;
 
-                            tankOther.Health -= (int)(otherVel * 5);
-                            tankThis.Health -= (int)(thisVel * 5);
+                            tankOther.Health -= (int)(thisVel * 15);
+                            tankThis.Health -= (int)(otherVel * 15);
 
-                            tankOther.ApplyForce(otherVel * 2 * -pointTo);
-                            tankThis.ApplyForce(thisVel * 2 * pointTo);
+                            tankOther.ApplyForce(thisVel * 2 * -pointTo);
+                            tankThis.ApplyForce(otherVel * 2 * pointTo);
                         }
                     }
 

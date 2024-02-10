@@ -70,14 +70,14 @@ namespace TANKS_
                     animations[i].Animate(spriteBatch);
                 }
             }
-
+            /*
             foreach(var dynh in Sim.DynamicBodies)
             {
                 foreach(var v in dynh.Verts)
                 {
                     spriteBatch.Draw(GameRoot.Instance.WhitePixel, new Rectangle(v.ToPoint(), new Point(4)), Color.White);
                 }
-            }
+            }*/
         }
 
         void AddTank()
