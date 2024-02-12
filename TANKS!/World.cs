@@ -174,7 +174,7 @@ namespace TANKS_
                 var p = Projectiles[i];
                 p.Update();
 
-                if (Math.Abs(p.Location.X) + Math.Abs(p.Location.Y) > 2000)
+                if (Math.Abs(p.Location.X) + Math.Abs(p.Location.Y) > 4000)
                 {
                     Projectiles.RemoveAt(i);
                     continue;
