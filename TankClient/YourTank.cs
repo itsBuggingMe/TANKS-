@@ -15,35 +15,22 @@ namespace TankClient
             //This function determines tank settings
             TankColor = TankColor.Copper; //TankColor.Copper, TankColor.Blue, TankColor.Green
             Weapon = Weapon.Cannon; //Weapon.Cannon, Weapon.Double, Weapon.Normal
-
-            //Note: tank color is cosmetic, but weapon changes the projectile and fire rate
         }
 
 
-        string LastTankEliminated = "";
         protected override void Update(Tank[] otherTanks)
         {
-            //Here is an example tank:
-            if(otherTanks.Length == 0)
+            if(otherTanks.Length != 0)
             {
-                if(LastTankEliminated == "")
-                {
-                    Shout("Elimated" + LastTankEliminated);
-                }
-                else
-                {
-                    Shout("No one else here...");
-                }
+                Tank target = otherTanks[0];
+                RotateTurretTowards(target.Location);
+                RotateTowards(target.Location);
+                Accelerate(1);
+                Fire();
             }
             else
             {
-                Tank target = otherTanks[0];
-
-                RotateTurretTowards(target.Location);
-                RotateTowards(target.Location);
-                Fire();
-                Shout("Attacking " + target.Name + " who is a " + target.TankColor.ToString() + " tank.");
-                LastTankEliminated = target.Name;
+                Shout("Lonely :(");
             }
         }
     }
